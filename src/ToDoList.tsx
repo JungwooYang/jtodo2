@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
+
 /* function TodoList() {
   const [todo, setTodo] = useState("");
+  const [todoError, setTodoError] = useState("");
   const onChange = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
@@ -9,7 +11,9 @@ import { useForm } from "react-hook-form";
   };
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(todo);
+    if(todo.length < 10) {
+      return setTodoError("Todo should be longer than 10 letters.")
+    }
   };
   return (
     <div>
@@ -25,13 +29,29 @@ import { useForm } from "react-hook-form";
   );
 }
 */
+
 function TodoList() {
-  const { register, watch } = useForm();
-  console.log(watch());
+  const { register, formState, handleSubmit } = useForm();
+  const onValid = (data: any) => {
+    console.log(data);
+  };
+  console.log(formState.errors);
   return (
     <div>
-      <form>
-        <input {...register("todo")} placeholder="what do you have to do?" />
+      <form
+        style={{ display: "flex", flexDirection: "column" }}
+        onSubmit={handleSubmit(onValid)}
+      >
+        <input
+          {...register("todo", {
+            required: "should write down something.",
+            minLength: {
+              value: 2,
+              message: " this must go longer than 2 letters",
+            },
+          })}
+          placeholder="what do you have to do?"
+        />
         <input {...register("name")} placeholder="name" />
         <input {...register("number")} placeholder="number" />
         <input {...register("lover")} placeholder="lover" />
