@@ -30,12 +30,22 @@ import { useForm } from "react-hook-form";
 }
 */
 
+interface Iform {
+  email: string;
+  name: string;
+  password: string;
+  lover: string;
+}
+
 function TodoList() {
-  const { register, formState, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Iform>({ defaultValues: { email: "@naver.com" } });
   const onValid = (data: any) => {
     console.log(data);
   };
-  console.log(formState.errors);
   return (
     <div>
       <form
@@ -43,18 +53,35 @@ function TodoList() {
         onSubmit={handleSubmit(onValid)}
       >
         <input
-          {...register("todo", {
-            required: "should write down something.",
-            minLength: {
-              value: 2,
-              message: " this must go longer than 2 letters",
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[A-Za-z0-9._%+-]+@naver\.com$/,
+              message: "Only naver.com emails available",
             },
           })}
-          placeholder="what do you have to do?"
+          placeholder="email"
+          style={{ borderColor: errors?.email?.message ? "red" : "" }}
         />
-        <input {...register("name")} placeholder="name" />
-        <input {...register("number")} placeholder="number" />
-        <input {...register("lover")} placeholder="lover" />
+        <span>{errors?.email?.message}</span>
+        <input
+          {...register("name", { required: "write here" })}
+          placeholder="name"
+          style={{ borderColor: errors?.name?.message ? "red" : "" }}
+        />
+        <span>{errors?.name?.message}</span>
+        <input
+          {...register("password", { required: "write here" })}
+          placeholder="password"
+          style={{ borderColor: errors?.password?.message ? "red" : "" }}
+        />
+        <span>{errors?.password?.message}</span>
+        <input
+          {...register("lover", { required: "write here" })}
+          placeholder="lover"
+          style={{ borderColor: errors?.lover?.message ? "red" : "" }}
+        />
+        <span>{errors?.lover?.message}</span>
         <button>add</button>
       </form>
     </div>
