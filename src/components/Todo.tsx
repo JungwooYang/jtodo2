@@ -10,27 +10,30 @@ function Todo({ text, id, category }: ITodo) {
     } = event;
     setTodos((oldTodos) => {
       const targetIndex = oldTodos.findIndex((todo) => todo.id === id);
-      const newTodo = { text, id, category: name };
-      console.log(oldTodos, targetIndex, newTodo);
-      return oldTodos;
+      const newTodo = { text, id, category: name as any };
+      return [
+        ...oldTodos.slice(0, targetIndex),
+        newTodo,
+        ...oldTodos.slice(targetIndex + 1),
+      ];
     });
   };
   return (
     <li>
       <span>{text}</span>
-      {category !== "TODO" && (
-        <button name="TODO" onClick={onClick}>
-          todo
-        </button>
-      )}
       {category !== "DOING" && (
         <button name="DOING" onClick={onClick}>
-          doing
+          Doing
+        </button>
+      )}
+      {category !== "TODO" && (
+        <button name="TODO" onClick={onClick}>
+          To Do
         </button>
       )}
       {category !== "DONE" && (
         <button name="DONE" onClick={onClick}>
-          done
+          Done
         </button>
       )}
     </li>
